@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from "vue";
+import { useRoute } from 'vue-router';
+import HeaderBar from "../src/public/components/header-bar.component.vue";
+
+const route = useRoute();
 </script>
 
 <template>
-<router-view></router-view>
+  <HeaderBar v-if="route.path !== '/login'" />
+  <router-view />
 </template>
-
-<style scoped>
-</style>

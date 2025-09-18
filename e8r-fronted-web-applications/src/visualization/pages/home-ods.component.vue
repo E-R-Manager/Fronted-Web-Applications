@@ -1,9 +1,14 @@
 <script>
+import HeaderBar from "../../public/components/header-bar.component.vue";
+
 import { computed } from 'vue';
 import store from '../../store/store.js';
 import {useRouter} from "vue-router";
 
 export default {
+  components: {
+    HeaderBar
+  },
   setup() {
     const userId = computed(() => store.state.user_id);
     const isActive = computed(() => store.state.isActive);
@@ -20,6 +25,7 @@ export default {
 </script>
 
 <template>
+  <HeaderBar />
   <div class="home-ods-container">
     <h1>Bienvenido a home ods</h1>
     <p>User ID: {{ userId }}</p>
@@ -29,5 +35,4 @@ export default {
 </template>
 
 <style scoped>
-
 </style>

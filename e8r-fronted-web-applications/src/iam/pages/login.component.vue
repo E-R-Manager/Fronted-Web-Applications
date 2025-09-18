@@ -22,7 +22,7 @@ export default{
             localStorage.setItem('token', token);
             store.commit('setUserId', userId);
             store.commit('setIsActive', true);
-            router.push('/home/ods');
+            router.push('/ods/home');
           }
       ).catch((error) => {
         alert("Incorrect username or password");

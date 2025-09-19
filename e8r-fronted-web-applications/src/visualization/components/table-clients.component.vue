@@ -3,51 +3,177 @@ export default {
   name: "table-clients",
   data() {
     return {
-      clients: [
-        { id: 1, fullName: "JUAN PEREZ", ruc: "20123456789", dni: "12345678" },
-        { id: 2, fullName: "ANA GOMEZ", ruc: "20987654321", dni: "87654321" },
-        { id: 3, fullName: "CARLOS RUIZ", ruc: "20456789012", dni: "23456789" },
-        { id: 4, fullName: "MARIA TORRES", ruc: "20876543210", dni: "98765432" },
-        { id: 5, fullName: "LUIS FERNANDEZ", ruc: "20345678901", dni: "34567890" },
-        { id: 6, fullName: "PATRICIA SALAS", ruc: "20765432109", dni: "87654320" },
-        { id: 7, fullName: "RICARDO DIAZ", ruc: "20234567890", dni: "45678901" },
-        { id: 8, fullName: "LUCIA CASTRO", ruc: "20654321098", dni: "76543210" },
-        { id: 9, fullName: "MIGUEL ROJAS", ruc: "20543210987", dni: "56789012" },
-        { id: 10, fullName: "SOFIA HERRERA", ruc: "20109876543", dni: "89012345" },
-      ],
+      clients: [],
+      currentPage: 1,
+      pageSize: 10,
+      maxVisiblePages: 5,
+      editJumpBefore: false,
+      editJumpAfter: false,
+      jumpPageBefore: "",
+      jumpPageAfter: ""
     };
   },
+  computed: {
+    paginatedClients() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.clients.slice(start, start + this.pageSize);
+    },
+    totalPages() {
+      return Math.ceil(this.clients.length / this.pageSize);
+    },
+    visiblePageNumbers() {
+      const pages = [];
+      const half = Math.floor(this.maxVisiblePages / 2);
+      let start = this.currentPage - half;
+      let end = this.currentPage + half;
+
+      if (start < 1) {
+        start = 1;
+        end = this.maxVisiblePages;
+      }
+      if (end > this.totalPages) {
+        end = this.totalPages;
+        start = this.totalPages - this.maxVisiblePages + 1;
+      }
+      start = Math.max(start, 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+  },
+  methods: {
+    goToPage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    },
+    handleJump(page) {
+      const pageNumber = parseInt(page);
+      if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
+        this.goToPage(pageNumber);
+      }
+      this.editJumpBefore = false;
+      this.editJumpAfter = false;
+      this.jumpPage = "";
+    }
+  },
+
 };
 </script>
 
 <template>
-  <table class="clients-table">
-    <thead>
-    <tr>
-      <th>NRO</th>
-      <th>NOMBRES Y APELLIDOS</th>
-      <th>RUC</th>
-      <th>DNI</th>
-      <th></th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(client, index) in clients" :key="client.id">
-      <td>{{ index + 1 }}</td>
-      <td>{{ client.fullName }}</td>
-      <td>{{ client.ruc }}</td>
-      <td>{{ client.dni }}</td>
-      <td>
-        <img src="../../assets/icon_more.png" alt="Ver más" class="icon-btn" title="Ver más" />
-      </td>
-      <td>
-        <img src="../../assets/icon_delete.png" alt="Eliminar" class="icon-btn" title="Eliminar" />
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div>
+    <table class="clients-table">
+      <thead>
+      <tr>
+        <th>NRO</th>
+        <th>NOMBRES Y APELLIDOS</th>
+        <th>RUC</th>
+        <th>DNI</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(client, index) in paginatedClients" :key="client.id">
+        <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
+        <td>{{ client.fullName }}</td>
+        <td>{{ client.ruc }}</td>
+        <td>{{ client.dni }}</td>
+        <td>
+          <img
+              src="../../assets/icon_more.png"
+              alt="Ver más"
+              class="icon-btn"
+              title="Ver más"
+          />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination" style="text-align:center; margin-top:16px;">
+      <button
+          class="pagination-btn"
+          :disabled="currentPage === 1"
+          @click="goToPage(currentPage - 1)"
+      >
+        <img src="../../assets/icon_left.png" alt="Anterior" class="arrow-icon" />
+      </button>
+
+      <!-- Página 1 (si está fuera del rango visible) -->
+      <button
+          v-if="visiblePageNumbers[0] > 1"
+          class="pagination-number"
+          @click="goToPage(1)"
+      >
+        1
+      </button>
+      <span v-if="visiblePageNumbers[0] > 2">
+        <span
+            v-if="!editJumpBefore"
+            class="pagination-ellipsis"
+            @click="editJumpBefore = true"
+        >
+          ...
+        </span>
+        <input
+            v-else
+            type="number"
+            v-model.number="jumpPage"
+            @keyup.enter="handleJump(jumpPage)"
+            @blur="handleJump(jumpPage)"
+            min="1"
+            :max="totalPages"
+            class="pagination-input"
+        />
+      </span>
+      <button
+          v-for="page in visiblePageNumbers"
+          :key="page"
+          @click="goToPage(page)"
+          :class="['pagination-number', { active: currentPage === page }]"
+      >
+        {{ page }}
+      </button>
+      <span v-if="visiblePageNumbers[visiblePageNumbers.length - 1] < totalPages - 1">
+        <span
+            v-if="!editJumpAfter"
+            class="pagination-ellipsis"
+            @click="editJumpAfter = true"
+        >
+          ...
+        </span>
+        <input
+            v-else
+            type="number"
+            v-model.number="jumpPage"
+            @keyup.enter="handleJump(jumpPage)"
+            @blur="handleJump(jumpPage)"
+            min="1"
+            :max="totalPages"
+            class="pagination-input"
+        />
+      </span>
+      <button
+          v-if="visiblePageNumbers[visiblePageNumbers.length - 1] < totalPages"
+          class="pagination-number"
+          @click="goToPage(totalPages)"
+      >
+        {{ totalPages }}
+      </button>
+      <button
+          class="pagination-btn"
+          :disabled="currentPage === totalPages"
+          @click="goToPage(currentPage + 1)"
+      >
+        <img src="../../assets/icon_right.png" alt="Siguiente" class="arrow-icon" />
+      </button>
+    </div>
+  </div>
 </template>
+
 
 
 <style scoped>
@@ -89,5 +215,67 @@ export default {
   cursor: pointer;
   display: block;
   margin: 0 auto;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-btn {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.pagination-number {
+  font-family: 'Inter', sans-serif;
+  color: #3001C0;
+  background: none;
+  border: none;
+  margin: 0 2px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pagination-number.active,
+.pagination-number:hover {
+  background: #3001C0;
+  color: #fff;
+  font-weight: 700;
+}
+
+.pagination-input {
+  width: 50px;
+  padding: 2px 4px;
+  font-size: 14px;
+  text-align: center;
+  margin: 0 4px;
+}
+.pagination-ellipsis {
+  cursor: pointer;
+  margin: 0 4px;
+  user-select: none;
 }
 </style>

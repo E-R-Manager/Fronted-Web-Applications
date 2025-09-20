@@ -32,12 +32,10 @@ export class BaseService {
         this.setToken();
         return axios.get(`${this.endpointPath()}/${id}`, this.httpOptions);
     }
-
     getAll(){
         this.setToken();
         return axios.get(this.endpointPath(), this.httpOptions);
     }
-
     create(data){
         this.setToken();
         return axios.post(this.endpointPath(), data, this.httpOptions);

@@ -1,9 +1,14 @@
 <script>
 export default {
   name: "table-clients",
+  props: {
+    clients: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
-      clients: [],
       currentPage: 1,
       pageSize: 10,
       maxVisiblePages: 5,
@@ -78,7 +83,7 @@ export default {
       <tbody>
       <tr v-for="(client, index) in paginatedClients" :key="client.id">
         <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
-        <td>{{ client.fullName }}</td>
+        <td>{{ client.name }}</td>
         <td>{{ client.ruc }}</td>
         <td>{{ client.dni }}</td>
         <td>

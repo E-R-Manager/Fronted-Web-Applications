@@ -69,7 +69,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="table-container">
     <table class="clients-table">
       <thead>
       <tr>
@@ -182,6 +182,10 @@ export default {
 
 
 <style scoped>
+.table-container {
+  padding-bottom: 40px;
+}
+
 .clients-table {
   width: 80%;
   border-collapse: collapse;
@@ -206,6 +210,7 @@ export default {
   border-top: 0.1px solid rgba(0,0,0,0.30);
   border-bottom: 0.1px solid rgba(0,0,0,0.30);
   font-weight: 800;
+  padding: 16px 8px;
 }
 
 

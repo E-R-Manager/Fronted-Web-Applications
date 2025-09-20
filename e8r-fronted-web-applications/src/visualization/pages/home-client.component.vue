@@ -30,7 +30,7 @@ export default {
 
 <template>
   <HeaderBar/>
-  <h2 class="main-title">ORDENES DE SERVICIO</h2>
+  <p class="main-title">LISTA DE CLIENTES</p>
   <div class="actions">
     <pv-button class="action-btn registrar-btn">
       <img :src="iconAdd" alt="Registrar" style="width:20px;height:20px;margin-right:0.5rem;" />

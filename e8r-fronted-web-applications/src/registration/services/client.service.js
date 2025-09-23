@@ -9,7 +9,6 @@ export class CustomerService extends BaseService {
     async getAllCustomersPaginated(page, pageSize) {
         this.setToken();
         let url = this.baseURL + '/customer' + '/paginated?page=' + page + '&pageSize=' + pageSize;
-        console.log(url);
         return axios.get(url, this.httpOptions);
     }
 }

@@ -2,14 +2,12 @@
 export default {
   name: "table-clients",
   props: {
-    clients: {
-      type: Array,
-      required: true
-    }
+    clients: { type: Array, required: true },
+    totalCount: { type: Number, required: true},
+    currentPage: { type: Number, required: true, default: 1}
   },
   data() {
     return {
-      currentPage: 1,
       pageSize: 10,
       maxVisiblePages: 5,
       editJumpBefore: false,
@@ -20,11 +18,10 @@ export default {
   },
   computed: {
     paginatedClients() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      return this.clients.slice(start, start + this.pageSize);
+      return this.clients;
     },
     totalPages() {
-      return Math.ceil(this.clients.length / this.pageSize);
+      return Math.ceil(this.totalCount / this.pageSize);
     },
     visiblePageNumbers() {
       const pages = [];
@@ -51,7 +48,7 @@ export default {
   methods: {
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
+        this.$emit('page-changed', page);
       }
     },
     handleJump(page) {

@@ -15,15 +15,27 @@ export default {
     return {
       customerService: new CustomerService(),
       customers: [],
+      totalCount: 0,
+      pageSize: 0,
+      currentPage: 1,
       iconAdd,
       iconFilter
     }
   },
+  methods: {
+    async fetchPage(page) {
+      const response = await this.customerService.getAllCustomersPaginated(page, this.pageSize);
+      this.customers = Array.isArray(response.data?.customers) ? response.data.customers : [];
+      this.totalCount = response.data.totalCount;
+      this.currentPage = page;
+    }
+  },
   async mounted() {
-    //const response = await this.customerService.getAllCustomersPaginated(1, 10);
-    //this.customers = Array.isArray(response.data?.customers) ? response.data.customers : [];
-    const response = await this.customerService.getAll();
-    this.customers = Array.isArray(response.data) ? response.data : [];
+    const response = await this.customerService.getAllCustomersPaginated(1, 10);
+    this.customers = Array.isArray(response.data?.customers) ? response.data.customers : [];
+    this.totalCount = response.data.totalCount;
+    this.pageSize = response.data.pageSize;
+    await this.fetchPage(1);
   }
 }
 </script>
@@ -41,7 +53,13 @@ export default {
       FILTROS
     </pv-button>
   </div>
-  <TableClients :clients="customers" class="table-clients"/>
+  <TableClients
+      :clients="customers"
+      :total-count="totalCount"
+      :current-page="currentPage"
+      @page-changed="fetchPage"
+      class="table-clients"
+  />
 </template>
 
 

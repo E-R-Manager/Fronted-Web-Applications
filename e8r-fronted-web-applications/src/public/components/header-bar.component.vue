@@ -40,8 +40,8 @@ const logout = () => {
         >SERVICIOS</router-link>
       </nav>
       <button class="logout-btn" @click="logout">
-        <img src="../../assets/icon_logout.png" alt="Cerrar sesión" class="logout-icon" />
-        Cerrar Sesión
+        <img src="../../assets/icon_logout.png" alt="CERRAR SESION" class="logout-icon" />
+        CERRAR SESION
       </button>
     </div>
   </header>

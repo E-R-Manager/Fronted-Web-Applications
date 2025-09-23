@@ -10,6 +10,8 @@ import HomeServicesComponent from "../visualization/pages/home-services.componen
 
 import EditClientComponent from "../registration/pages/edit-client.component.vue"
 
+import RegisterClientComponent from "../registration/pages/register-client.component.vue"
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -18,9 +20,10 @@ const router = createRouter({
         {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
         {path: '/ods/home', component: HomeOdsComponent},
         {path: '/client/home', component: HomeClientComponent},
-        {path: '/client/edit', component: EditClientComponent},
+        {path: '/client/edit/:id', component: EditClientComponent},
+        {path: '/client/register', component: RegisterClientComponent},
         {path: '/inventory/home', component: HomeInventoryComponent},
-        {path: '/services/home', component: HomeServicesComponent},
+        {path: '/service/home', component: HomeServicesComponent},
     ]
 });
 

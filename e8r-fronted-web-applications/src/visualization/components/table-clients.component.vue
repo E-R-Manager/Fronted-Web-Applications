@@ -89,6 +89,7 @@ export default {
               alt="Ver más"
               class="icon-btn"
               title="Ver más"
+              @click="$router.push({ path: `/client/edit/${client.id}` })"
           />
         </td>
       </tr>

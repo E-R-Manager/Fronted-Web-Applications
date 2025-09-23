@@ -28,6 +28,9 @@ export default {
       this.customers = Array.isArray(response.data?.customers) ? response.data.customers : [];
       this.totalCount = response.data.totalCount;
       this.currentPage = page;
+    },
+    goToRegister() {
+      this.$router.push({ path: '/client/register' });
     }
   },
   async mounted() {
@@ -44,7 +47,7 @@ export default {
   <HeaderBar/>
   <p class="main-title">LISTA DE CLIENTES</p>
   <div class="actions">
-    <pv-button class="action-btn registrar-btn">
+    <pv-button class="action-btn registrar-btn" @click="goToRegister">
       <img :src="iconAdd" alt="Registrar" style="width:20px;height:20px;margin-right:0.5rem;" />
       REGISTRAR
     </pv-button>
